@@ -7,7 +7,7 @@ refresh token aswell.
 
 ## Example usage
 
-Atach do IEx
+Attach to IEx
 ```shell
 iex -S mix
 ```
@@ -15,5 +15,10 @@ iex -S mix
 Generate the client assertion
 ```mix.exs
 private_key = File.read!("mykey.pem")
-ClientAssertion.generate("f29eb56b-0e16-4017-aefb-483557e7c3ec", "stone_account", private_key)
+assertion = ClientAssertion.generate("8befb5e2-f02d-43d6-b8d0-0978cfa2edcc", "stone_bank", private_key)
+```
+
+Authenticate to get access and refresh tokens
+```mix.exs
+ClientAssertion.authenticate(assertion)
 ```

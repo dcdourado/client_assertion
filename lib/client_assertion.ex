@@ -16,11 +16,13 @@ defmodule ClientAssertion do
 
   @doc "Uses `generate/3` with \"stone_bank\" audience"
   @spec generate(client_id :: uuid(), private_key :: pem()) :: assertion()
-  def generate(client_id, private_key), do: generate(client_id, "stone_bank", private_key)
+  def generate(client_id, private_key) when is_binary(client_id) and is_binary(private_key),
+    do: generate(client_id, "stone_bank", private_key)
 
   @doc "Generates a JWT with required claims and signs it using given private key"
   @spec generate(client_id :: uuid(), realm :: String.t(), private_key :: pem()) :: assertion()
-  def generate(client_id, realm, private_key) do
+  def generate(client_id, realm, private_key)
+      when is_binary(client_id) and is_binary(realm) and is_binary(private_key) do
     ClientAssertion.Token.generate_and_sign!(
       %{
         "iss" => client_id,
@@ -36,4 +38,33 @@ defmodule ClientAssertion do
   defp aud(realm), do: @accounts_url <> "/auth/realms/" <> realm
 
   defp signer(private_key), do: Joken.Signer.create("RS256", %{"pem" => private_key})
+
+  @type http_client_response ::
+          {:ok, status_code :: pos_integer(),
+           headers :: list({name :: String.t(), value :: String.t()}), body :: String.t()}
+          | {:error, term()}
+
+  @doc "Makes the authentication request with given client assertion to the accounts URL"
+  @spec authenticate(assertion :: assertion()) :: http_client_response()
+  def authenticate(assertion) when is_binary(assertion) do
+    {:ok, %{"realm" => realm, "iss" => client_id}} = Joken.peek_claims(assertion)
+    url = (@accounts_url <> "/auth/realms/#{realm}/protocol/openid-connect/token") |> IO.inspect()
+
+    :hackney.request(
+      "post",
+      url,
+      [
+        {"user-agent", "ClientAssertion"},
+        {"content-type", "application/x-www-form-urlencoded"}
+      ],
+      {:form,
+       [
+         {"client_id", client_id},
+         {"grant_type", "client_credentials"},
+         {"client_assertion", assertion},
+         {"client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"}
+       ]},
+      [:with_body]
+    )
+  end
 end

@@ -21,7 +21,8 @@ defmodule ClientAssertion.MixProject do
     [
       {:joken, "~> 2.5.0"},
       {:jason, "~> 1.3.0"},
-      {:uuid, "~> 1.1.8"}
+      {:uuid, "~> 1.1.8"},
+      {:hackney, "~> 1.18.1"}
     ]
   end
 end
