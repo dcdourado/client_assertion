@@ -5,6 +5,14 @@ Client assertions consists of an identification of the client signed with it's p
 This assertion can be used to authenticate with PandA to get an access token and possibly a
 refresh token aswell.
 
+## Installation
+
+1. Get and install [asdf](https://asdf-vm.com/guide/getting-started.html).
+2. Clone and access the directory of this repository on terminal.
+3. Install Elixir and Erlang with `asdf install`.
+4. Install dependencies with `mix deps.get`.
+5. Compile the project with `mix compile`.
+
 ## Example usage
 
 Attach to IEx
