@@ -23,10 +23,16 @@ iex -S mix
 Generate the client assertion
 ```mix.exs
 private_key = File.read!("mykey.pem")
-assertion = ClientAssertion.generate("8befb5e2-f02d-43d6-b8d0-0978cfa2edcc", "stone_bank", private_key, "sandbox")
+assertion = ClientAssertion.generate(<client_id>, "stone_bank", private_key, "sandbox")
 ```
 
 Authenticate to get access and refresh tokens
 ```mix.exs
 ClientAssertion.authenticate(assertion, "sandbox")
 ```
+____
+### Client Creation
+
+A custom client can be created through homolog or sandbox admin. Navigating to application tab : Technology > Service Apps > Applications.
+
+After creation, the `<client_id>` to be used on authentication will be listed on application summary 
