@@ -32,6 +32,7 @@ ClientAssertion.authenticate(assertion, "sandbox")
 ```
 ____
 ### Client Creation
+
 A custom client can be created through homolog or sandbox admin. Navigating to application tab : Technology > Service Apps > Applications.
 
-after creation the `<client_id>` to be used on authentication will be listed on application summary 
+After creation, the `<client_id>` to be used on authentication will be listed on application summary 
